@@ -8,10 +8,8 @@ void main() {
   setUp(() {
     SharedPreferences.setMockInitialValues({});
     preferences.saved.clear();
-    preferences.reactions.clear();
     preferences.name = 'Luis';
     preferences.reduceMotion = true;
-    preferences.gifs = true;
   });
   testWidgets('Busca, abre detalles y guarda una película en Mi lista', (
     tester,
@@ -49,7 +47,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(movies.length, 23);
     expect(movies.every((m) => trailerUrls.containsKey(m['id'])), isTrue);
-    await tester.tap(find.byTooltip('Ver tráiler de Moana 2'));
+    await tester.tap(find.byTooltip('Ver tráiler de Avengers: Endgame'));
     await tester.pumpAndSettle();
     expect(find.text('Tráiler oficial'), findsOneWidget);
     expect(find.text('Reproductor oficial de Disney'), findsOneWidget);
@@ -124,29 +122,12 @@ void main() {
     expect(launched, contains(FootballPage.fifaUrl));
     expect(tester.takeException(), isNull);
   });
-  testWidgets('Las reacciones y favoritos persisten en el dispositivo', (
-    tester,
-  ) async {
-    await tester.pumpWidget(
-      const MaterialApp(
-        home: MediaQuery(
-          data: MediaQueryData(disableAnimations: true),
-          child: Scaffold(body: ReactionsBar(contentId: 'endgame')),
-        ),
-      ),
-    );
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('Me encanta'));
-    await tester.pumpAndSettle();
-    expect(find.text('Tu reacción: Me encanta'), findsOneWidget);
-    preferences.saved.add('endgame');
+  testWidgets('Los favoritos persisten en el dispositivo', (tester) async {
+    preferences.toggleFavorite('endgame');
     await preferences.persist();
-    preferences.reactions.clear();
     preferences.saved.clear();
     await preferences.load();
     expect(preferences.saved, contains('endgame'));
-    expect(preferences.reactions['endgame'], 'heart');
-    expect(tester.takeException(), isNull);
   });
   testWidgets('El perfil permite editar y guardar el nombre', (tester) async {
     await tester.pumpWidget(const MyApp());
@@ -164,6 +145,32 @@ void main() {
       (await SharedPreferences.getInstance()).getString('profileName'),
       'Alex',
     );
+    expect(tester.takeException(), isNull);
+  });
+  testWidgets('El carrusel avanza y respeta reducir movimiento', (
+    tester,
+  ) async {
+    preferences.reduceMotion = false;
+    await tester.pumpWidget(const MyApp());
+    await tester.pumpAndSettle();
+    expect(
+      find.byTooltip('Ver tráiler de Avengers: Endgame').hitTestable(),
+      findsOneWidget,
+    );
+    await tester.pump(const Duration(seconds: 6));
+    await tester.pump(const Duration(seconds: 1));
+    expect(
+      find.byTooltip('Ver tráiler de Black Panther').hitTestable(),
+      findsOneWidget,
+    );
+    preferences.update(reduceMotion: true);
+    await tester.pumpAndSettle();
+    await tester.pump(const Duration(seconds: 13));
+    expect(
+      find.byTooltip('Ver tráiler de Black Panther').hitTestable(),
+      findsOneWidget,
+    );
+    await tester.pumpWidget(const SizedBox.shrink());
     expect(tester.takeException(), isNull);
   });
 }

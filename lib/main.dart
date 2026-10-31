@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
@@ -325,7 +327,7 @@ class PhoneFrame extends StatelessWidget {
   Widget build(BuildContext context) => LayoutBuilder(
     builder: (context, constraints) {
       if (constraints.maxWidth < 600) return child;
-      final height = (constraints.maxHeight - 64).clamp(400.0, 890.0);
+      final height = (constraints.maxHeight - 40).clamp(360.0, 850.0);
       return ColoredBox(
         color: const Color(0xFF060A12),
         child: Stack(
@@ -335,7 +337,7 @@ class PhoneFrame extends StatelessWidget {
                 decoration: BoxDecoration(
                   gradient: RadialGradient(
                     colors: [
-                      const Color(0xFF173D48).withValues(alpha: .6),
+                      const Color(0xFF19293A).withValues(alpha: .45),
                       const Color(0xFF060A12),
                     ],
                     radius: .8,
@@ -345,9 +347,9 @@ class PhoneFrame extends StatelessWidget {
             ),
             Center(
               child: Container(
-                width: 412,
+                width: 400,
                 height: height,
-                padding: const EdgeInsets.all(7),
+                padding: const EdgeInsets.all(6),
                 decoration: BoxDecoration(
                   gradient: const LinearGradient(
                     begin: Alignment.topLeft,
@@ -360,8 +362,8 @@ class PhoneFrame extends StatelessWidget {
                   ),
                   borderRadius: BorderRadius.circular(46),
                   border: Border.all(
-                    color: const Color(0xFF78838E),
-                    width: 2.5,
+                    color: const Color(0xFF586471),
+                    width: 1.5,
                   ),
                   boxShadow: const [
                     BoxShadow(
@@ -377,7 +379,7 @@ class PhoneFrame extends StatelessWidget {
                     children: [
                       Container(
                         color: background,
-                        height: 37,
+                        height: 32,
                         padding: const EdgeInsets.symmetric(horizontal: 24),
                         child: const Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -393,8 +395,8 @@ class PhoneFrame extends StatelessWidget {
                               ),
                             ),
                             SizedBox(
-                              width: 88,
-                              height: 22,
+                              width: 80,
+                              height: 20,
                               child: DecoratedBox(
                                 decoration: BoxDecoration(
                                   color: Colors.black,
@@ -422,7 +424,7 @@ class PhoneFrame extends StatelessWidget {
                       Expanded(
                         child: MediaQuery(
                           data: MediaQuery.of(context)
-                              .copyWith(size: Size(392, height - 47)),
+                              .copyWith(size: Size(385, height - 62)),
                           child: child,
                         ),
                       ),
@@ -457,15 +459,76 @@ class StreamingApp extends StatefulWidget {
   State<StreamingApp> createState() => _StreamingAppState();
 }
 
-class _StreamingAppState extends State<StreamingApp> {
+class _StreamingAppState extends State<StreamingApp>
+    with WidgetsBindingObserver {
   int tab = 0;
   int featured = 0;
   String query = '';
   String category = 'Para ti';
   final saved = preferences.saved;
-  final featuredController = PageController();
+  final featuredController = PageController(viewportFraction: .94);
+  Timer? carouselTimer;
+  bool foreground = true;
+  List<Map<String, String>> get featuredMovies {
+    final ids = switch (category) {
+      'Pixar' => ['coco', 'insideout', 'luca', 'soul'],
+      'Clásicos' => ['lionking', 'toystory', 'nemo', 'ratatouille'],
+      _ => ['endgame', 'blackpanther', 'rogueone', 'captainmarvel'],
+    };
+    return ids
+        .map((id) => movies.firstWhere((movie) => movie['id'] == id))
+        .toList();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    preferences.addListener(configureCarousel);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    configureCarousel();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    foreground = state == AppLifecycleState.resumed;
+    configureCarousel();
+  }
+
+  void configureCarousel() {
+    carouselTimer?.cancel();
+    if (!mounted ||
+        !foreground ||
+        preferences.reduceMotion ||
+        MediaQuery.disableAnimationsOf(context)) {
+      return;
+    }
+    carouselTimer = Timer.periodic(const Duration(seconds: 6), (_) {
+      if (!mounted ||
+          tab != 0 ||
+          !foreground ||
+          ModalRoute.of(context)?.isCurrent != true ||
+          !featuredController.hasClients ||
+          featuredController.position.isScrollingNotifier.value) {
+        return;
+      }
+      featuredController.animateToPage(
+        (featured + 1) % featuredMovies.length,
+        duration: const Duration(milliseconds: 850),
+        curve: Curves.easeInOutCubic,
+      );
+    });
+  }
+
   @override
   void dispose() {
+    carouselTimer?.cancel();
+    preferences.removeListener(configureCarousel);
+    WidgetsBinding.instance.removeObserver(this);
     featuredController.dispose();
     super.dispose();
   }
@@ -557,7 +620,7 @@ class _StreamingAppState extends State<StreamingApp> {
         ),
       ),
       bottomNavigationBar: NavigationBar(
-        height: 64,
+        height: 60,
         backgroundColor: const Color(0xFF080D18),
         indicatorColor: const Color(0xFF183F42),
         selectedIndex: tab,
@@ -609,7 +672,7 @@ class _StreamingAppState extends State<StreamingApp> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const DisneyLogo(),
+            const BrandLogo(brand: 'Disney+', width: 87, height: 43),
             IconButton(
               tooltip: 'Mi perfil',
               onPressed: () => setState(() => tab = 3),
@@ -656,19 +719,15 @@ class _StreamingAppState extends State<StreamingApp> {
       ),
       const SizedBox(height: 12),
       SizedBox(
-        height: 370,
+        height: 292,
         child: PageView.builder(
           controller: featuredController,
           itemCount: 4,
           onPageChanged: (value) => setState(() => featured = value),
-          itemBuilder: (_, index) => featuredCard(
-            (category == 'Acción'
-                ? [movies[17], movies[18], movies[21], movies[20]]
-                : [movies[0], movies[1], movies[11], movies[6]])[index],
-          ),
+          itemBuilder: (_, index) => featuredCard(featuredMovies[index]),
         ),
       ),
-      const SizedBox(height: 13),
+      const SizedBox(height: 2),
       Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: List.generate(
@@ -696,7 +755,7 @@ class _StreamingAppState extends State<StreamingApp> {
         ),
       ),
       Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 22),
+        padding: const EdgeInsets.fromLTRB(18, 4, 18, 18),
         child: Row(
           children: [
             brand('Disney'),
@@ -707,13 +766,13 @@ class _StreamingAppState extends State<StreamingApp> {
           ],
         ),
       ),
-      if (category == 'Para ti') footballBanner(),
       if (category == 'Para ti' || category == 'Acción')
         rail(
           'Acción sin límites',
           movies.where((m) => m['genre']!.contains('Acción')).toList(),
         ),
       if (category == 'Para ti') popularRail(),
+      if (category == 'Para ti') footballBanner(),
       if (category == 'Para ti' || category == 'Clásicos')
         rail(
           'Clásicos que viven para siempre',
@@ -755,115 +814,139 @@ class _StreamingAppState extends State<StreamingApp> {
     ],
   );
   Widget featuredCard(Map<String, String> movie) => Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 16),
-    child: ClipRRect(
-      borderRadius: BorderRadius.circular(20),
-      child: Stack(
-        fit: StackFit.expand,
-        children: [
-          Image.asset(
-            movie['id'] == 'moana'
-                ? 'assets/images/hero.jpg'
-                : 'assets/images/${movie['id']}.jpg',
-            fit: BoxFit.cover,
-            alignment: Alignment.topCenter,
-          ),
-          const DecoratedBox(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                stops: [0, .4, .72, 1],
-                colors: [
-                  Color(0x22080C17),
-                  Colors.transparent,
-                  Color(0xCC080C17),
-                  Color(0xFF080C17),
-                ],
+    padding: const EdgeInsets.symmetric(horizontal: 5),
+    child: AnimatedBuilder(
+      animation: featuredController,
+      builder: (context, child) {
+        final index = featuredMovies.indexWhere((m) => m['id'] == movie['id']);
+        final page =
+            featuredController.hasClients &&
+                featuredController.position.hasContentDimensions
+            ? featuredController.page ?? featured.toDouble()
+            : featured.toDouble();
+        final distance = (page - index).abs().clamp(0.0, 1.0);
+        return Transform.scale(scale: 1 - distance * .035, child: child);
+      },
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(15),
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            Image.asset(
+              'assets/images/${movie['id']}${['endgame', 'rogueone'].contains(movie['id']) ? '_hero' : ''}.jpg',
+              fit: BoxFit.cover,
+              alignment: Alignment.topCenter,
+              errorBuilder: (_, error, stack) => Image.asset(
+                'assets/images/${movie['id']}.jpg',
+                fit: BoxFit.cover,
+                alignment: Alignment.topCenter,
               ),
             ),
-          ),
-          Positioned(
-            top: 15,
-            left: 15,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+            const DecoratedBox(
               decoration: BoxDecoration(
-                color: Colors.black54,
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: Colors.white24),
-              ),
-              child: const Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(CupertinoIcons.sparkles, color: accent, size: 12),
-                  SizedBox(width: 5),
-                  Text(
-                    'UNA HISTORIA EXTRAORDINARIA',
-                    style: TextStyle(
-                      fontSize: 8,
-                      letterSpacing: 1.1,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Positioned(
-            left: 18,
-            right: 18,
-            bottom: 12,
-            child: Column(
-              children: [
-                BrandLogo(brand: movie['studio']!, width: 90, height: 24),
-                const SizedBox(height: 5),
-                Text(
-                  movie['title']!,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontSize: 35,
-                    fontWeight: FontWeight.w800,
-                    height: 1.05,
-                    letterSpacing: -1,
-                  ),
-                ),
-                const SizedBox(height: 9),
-                Text(
-                  '${movie['year']}  •  ${movie['genre']}',
-                  style: const TextStyle(
-                    fontSize: 11,
-                    color: Color(0xFFD6DFE6),
-                  ),
-                ),
-                const SizedBox(height: 17),
-                Row(
-                  children: [
-                    Expanded(
-                      child: FilledButton.icon(
-                        onPressed: () => details(movie),
-                        icon: const Icon(CupertinoIcons.play_fill, size: 15),
-                        label: const Text(
-                          'Descubrir',
-                          style: TextStyle(fontWeight: FontWeight.w700),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 9),
-                    IconButton.filledTonal(
-                      tooltip: 'Ver tráiler de ${movie['title']}',
-                      onPressed: () => openTrailer(context, movie),
-                      icon: const Icon(
-                        CupertinoIcons.film,
-                        color: Colors.white,
-                      ),
-                    ),
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  stops: [0, .3, .66, 1],
+                  colors: [
+                    Color(0x22080C17),
+                    Colors.transparent,
+                    Color(0xB3080C17),
+                    background,
                   ],
                 ),
-              ],
+              ),
             ),
-          ),
-        ],
+            const Positioned(
+              top: 15,
+              left: 16,
+              child: Text(
+                'PELÍCULA DESTACADA',
+                style: TextStyle(
+                  fontSize: 8,
+                  letterSpacing: 1.8,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white70,
+                ),
+              ),
+            ),
+            Positioned(
+              left: 17,
+              right: 17,
+              bottom: 16,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  BrandLogo(brand: movie['studio']!, width: 74, height: 20),
+                  const SizedBox(height: 8),
+                  Text(
+                    movie['title']!,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontSize: 25,
+                      height: 1.08,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: -.6,
+                    ),
+                  ),
+                  const SizedBox(height: 7),
+                  Text(
+                    '${movie['year']}  ·  ${movie['genre']}',
+                    style: const TextStyle(
+                      fontSize: 10,
+                      color: Color(0xFFCBD1DC),
+                    ),
+                  ),
+                  const SizedBox(height: 14),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Tooltip(
+                          message: 'Ver tráiler de ${movie['title']}',
+                          child: FilledButton.icon(
+                            onPressed: () => openTrailer(context, movie),
+                            icon: const Icon(
+                              CupertinoIcons.play_fill,
+                              size: 13,
+                            ),
+                            label: const Text(
+                              'Ver tráiler',
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            style: FilledButton.styleFrom(
+                              backgroundColor: Colors.white,
+                              foregroundColor: background,
+                              padding: const EdgeInsets.symmetric(vertical: 13),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(7),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      IconButton.outlined(
+                        tooltip: 'Ver detalles de ${movie['title']}',
+                        onPressed: () => details(movie),
+                        icon: const Icon(CupertinoIcons.info, size: 19),
+                        style: IconButton.styleFrom(
+                          side: const BorderSide(color: Colors.white38),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(7),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     ),
   );
@@ -1214,7 +1297,7 @@ class _StreamingAppState extends State<StreamingApp> {
       const Divider(),
       SwitchListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: 16),
-        secondary: const Icon(CupertinoIcons.sparkles),
+        secondary: const Icon(CupertinoIcons.slider_horizontal_3),
         title: const Text('Animaciones'),
         subtitle: const Text(
           'Transiciones y efectos de movimiento',
@@ -1222,17 +1305,6 @@ class _StreamingAppState extends State<StreamingApp> {
         ),
         value: !preferences.reduceMotion,
         onChanged: (value) => preferences.update(reduceMotion: !value),
-      ),
-      SwitchListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16),
-        secondary: const Icon(CupertinoIcons.smiley),
-        title: const Text('GIFs y reacciones'),
-        subtitle: const Text(
-          'Stickers animados en las películas',
-          style: TextStyle(fontSize: 11, color: muted),
-        ),
-        value: preferences.gifs,
-        onChanged: (value) => preferences.update(gifs: value),
       ),
       const Divider(),
       ListTile(
@@ -1244,7 +1316,7 @@ class _StreamingAppState extends State<StreamingApp> {
           builder: (context) => AlertDialog(
             title: const Text('Una experiencia de cine'),
             content: const Text(
-              'Catálogo educativo en español con tráileres oficiales. Tus favoritos, perfil y reacciones se guardan en este dispositivo. El fútbol se abre en proveedores oficiales; puede requerir suscripción y depende de tu región.',
+              'Catálogo educativo en español con tráileres oficiales. Tus favoritos y perfil se guardan en este dispositivo. El fútbol se abre en proveedores oficiales; puede requerir suscripción y depende de tu región.',
             ),
             actions: [
               TextButton(
@@ -1308,7 +1380,7 @@ class _StreamingAppState extends State<StreamingApp> {
           ),
           child: Row(
             children: [
-              const SportOrb(size: 54),
+              const BrandLogo(brand: 'ESPN', width: 56, height: 22),
               const SizedBox(width: 15),
               const Expanded(
                 child: Column(
@@ -1461,8 +1533,7 @@ class _DetailPageState extends State<DetailPage> {
                   ),
                 ),
                 const SizedBox(height: 25),
-                ReactionsBar(contentId: widget.movie['id']!),
-                const SizedBox(height: 20),
+
                 OutlinedButton.icon(
                   onPressed: () async {
                     await Clipboard.setData(
@@ -1720,20 +1791,12 @@ final preferences = AppPreferences();
 class AppPreferences extends ChangeNotifier {
   String name = 'Luis';
   bool reduceMotion = false;
-  bool gifs = true;
   final Set<String> saved = {};
-  final Map<String, String> reactions = {};
   Future<void> load() async {
     final store = await SharedPreferences.getInstance();
     name = store.getString('profileName') ?? 'Luis';
     reduceMotion = store.getBool('reduceMotion') ?? false;
-    gifs = store.getBool('gifs') ?? true;
     saved.addAll(store.getStringList('favorites') ?? []);
-    final encoded = store.getStringList('reactions') ?? [];
-    for (final item in encoded) {
-      final parts = item.split(':');
-      if (parts.length == 2) reactions[parts[0]] = parts[1];
-    }
     notifyListeners();
   }
 
@@ -1741,34 +1804,18 @@ class AppPreferences extends ChangeNotifier {
     final store = await SharedPreferences.getInstance();
     await store.setString('profileName', name);
     await store.setBool('reduceMotion', reduceMotion);
-    await store.setBool('gifs', gifs);
     await store.setStringList('favorites', saved.toList());
-    await store.setStringList(
-      'reactions',
-      reactions.entries.map((e) => '${e.key}:${e.value}').toList(),
-    );
   }
 
-  void update({String? name, bool? reduceMotion, bool? gifs}) {
+  void update({String? name, bool? reduceMotion}) {
     if (name != null && name.trim().isNotEmpty) this.name = name.trim();
     if (reduceMotion != null) this.reduceMotion = reduceMotion;
-    if (gifs != null) this.gifs = gifs;
     notifyListeners();
     persist();
   }
 
   void toggleFavorite(String id) {
     if (!saved.add(id)) saved.remove(id);
-    notifyListeners();
-    persist();
-  }
-
-  void react(String contentId, String reaction) {
-    if (reactions[contentId] == reaction) {
-      reactions.remove(contentId);
-    } else {
-      reactions[contentId] = reaction;
-    }
     notifyListeners();
     persist();
   }
@@ -1914,7 +1961,7 @@ class FootballPage extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SportOrb(size: 65),
+                  BrandLogo(brand: 'ESPN', width: 60, height: 22),
                 ],
               ),
               SizedBox(height: 22),
@@ -1960,7 +2007,7 @@ class FootballPage extends StatelessWidget {
           url: disneyUrl,
           button: 'Abrir ESPN / Disney+',
         ),
-        const SizedBox(height: 13),
+        const SizedBox(height: 2),
         providerCard(
           context,
           title: 'FIFA+',
@@ -1978,7 +2025,7 @@ class FootballPage extends StatelessWidget {
           label: const Text('Consultar agenda oficial de ESPN'),
         ),
         const SizedBox(height: 25),
-        const ReactionsBar(contentId: 'football'),
+
         const SizedBox(height: 25),
         const Text(
           'La app no integra una señal propia ni verifica qué partido está en vivo en este momento. Los proveedores pueden requerir cuenta o suscripción.',
@@ -2085,156 +2132,6 @@ class NaturePage extends StatelessWidget {
         ),
       ],
     ),
-  );
-}
-
-class SportOrb extends StatefulWidget {
-  final double size;
-  const SportOrb({super.key, this.size = 60});
-  @override
-  State<SportOrb> createState() => _SportOrbState();
-}
-
-class _SportOrbState extends State<SportOrb>
-    with SingleTickerProviderStateMixin {
-  late final controller = AnimationController(
-    vsync: this,
-    duration: const Duration(seconds: 4),
-  );
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (MediaQuery.disableAnimationsOf(context)) {
-      controller.stop();
-    } else {
-      controller.repeat(reverse: true);
-    }
-  }
-
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) => AnimatedBuilder(
-    animation: controller,
-    builder: (_, child) => Transform.rotate(
-      angle: controller.value * .5,
-      child: Transform.scale(scale: 1 + controller.value * .08, child: child),
-    ),
-    child: Container(
-      width: widget.size,
-      height: widget.size,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: accent.withValues(alpha: .1),
-        border: Border.all(color: accent.withValues(alpha: .3)),
-        boxShadow: [
-          BoxShadow(color: accent.withValues(alpha: .12), blurRadius: 24),
-        ],
-      ),
-      child: Icon(
-        Icons.sports_soccer_rounded,
-        color: accent,
-        size: widget.size * .58,
-      ),
-    ),
-  );
-}
-
-class ReactionsBar extends StatelessWidget {
-  final String contentId;
-  const ReactionsBar({super.key, required this.contentId});
-  @override
-  Widget build(BuildContext context) => ListenableBuilder(
-    listenable: preferences,
-    builder: (context, _) {
-      if (!preferences.gifs) return const SizedBox.shrink();
-      const names = {
-        'heart': 'Me encanta',
-        'star': 'Increíble',
-        'ball': '¡Gol!',
-      };
-      final selected = preferences.reactions[contentId];
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Exprésalo con un GIF',
-            style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700),
-          ),
-          const SizedBox(height: 5),
-          const Text(
-            'Tu reacción se guarda solo en este dispositivo.',
-            style: TextStyle(color: muted, fontSize: 10),
-          ),
-          const SizedBox(height: 14),
-          Row(
-            children: names.entries.map((entry) {
-              final chosen = selected == entry.key;
-              return Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(right: 7),
-                  child: Semantics(
-                    button: true,
-                    selected: chosen,
-                    label: entry.value,
-                    child: InkWell(
-                      onTap: () => preferences.react(contentId, entry.key),
-                      borderRadius: BorderRadius.circular(16),
-                      child: AnimatedContainer(
-                        duration: const Duration(milliseconds: 220),
-                        padding: const EdgeInsets.symmetric(vertical: 8),
-                        decoration: BoxDecoration(
-                          color: background,
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(
-                            color: chosen ? accent : Colors.white12,
-                            width: chosen ? 2 : 1,
-                          ),
-                        ),
-                        child: Column(
-                          children: [
-                            Image.asset(
-                              'assets/images/reaction_${entry.key}.${MediaQuery.disableAnimationsOf(context) ? 'png' : 'gif'}',
-                              height: 58,
-                              width: 58,
-                              excludeFromSemantics: true,
-                            ),
-                            Text(
-                              entry.value,
-                              style: const TextStyle(fontSize: 10),
-                            ),
-                            const SizedBox(height: 3),
-                            Icon(
-                              chosen
-                                  ? CupertinoIcons.check_mark_circled_solid
-                                  : CupertinoIcons.plus_circled,
-                              size: 14,
-                              color: chosen ? accent : muted,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              );
-            }).toList(),
-          ),
-          if (selected != null)
-            Padding(
-              padding: const EdgeInsets.only(top: 10),
-              child: Text(
-                'Tu reacción: ${names[selected]}',
-                style: const TextStyle(color: accent, fontSize: 11),
-              ),
-            ),
-        ],
-      );
-    },
   );
 }
 

@@ -91,7 +91,8 @@
   "endgame": {
     "page": "https://movies.disney.com/avengers-endgame",
     "image": "https://lumiere-a.akamaihd.net/v1/images/p_disneymovies_avengers_endgame_encore_v1_86784ef0.jpeg?region=0%2C0%2C540%2C810",
-    "trailer": "https://secure.disney.com/embed/5840cf6e5b0ccebd6b4f2a72?domain=video.disney.com"
+    "trailer": "https://secure.disney.com/embed/5840cf6e5b0ccebd6b4f2a72?domain=video.disney.com",
+    "hero": "https://thewaltdisneycompany.com/app/uploads/2019/02/AvengersEndgame5c2f984ae1699-1024x543.jpg"
   },
   "blackpanther": {
     "page": "https://movies.disney.com/black-panther",
@@ -111,7 +112,8 @@
   "rogueone": {
     "page": "https://movies.disney.com/rogue-one-a-star-wars-story",
     "image": "https://lumiere-a.akamaihd.net/v1/images/p_rogueoneastarwarsstory_20527_d05c8a04.jpeg?region=0%2C0%2C540%2C810",
-    "trailer": "https://secure.disney.com/embed/53ec6724dcd393709056807f?domain=video.disney.com"
+    "trailer": "https://secure.disney.com/embed/53ec6724dcd393709056807f?domain=video.disney.com",
+    "hero": "https://lumiere-a.akamaihd.net/v1/images/pp_rogueoneastarwarsstory_herobanner_mobile_20527_cfabb63f.jpeg"
   },
   "junglebook": {
     "page": "https://movies.disney.com/the-jungle-book-2016",
