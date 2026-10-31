@@ -1,0 +1,121 @@
+{
+  "moana": {
+    "page": "https://movies.disney.com/moana-2",
+    "image": "https://lumiere-a.akamaihd.net/v1/images/p_studio_moana_2_poster_now_available_f4281ff6.jpeg?region=0%2C0%2C540%2C810",
+    "trailer": "https://secure.disney.com/embed/61f4bc35ea7c5dea2c651fcc?domain=video.disney.com"
+  },
+  "insideout": {
+    "page": "https://movies.disney.com/inside-out-2",
+    "image": "https://lumiere-a.akamaihd.net/v1/images/p_insideout2_now_available_disneyplus_d24c051c.jpeg?region=0%2C0%2C540%2C810",
+    "trailer": "https://secure.disney.com/embed/61f2dc47b33ccdeacd351fcc?domain=video.disney.com"
+  },
+  "encanto": {
+    "page": "https://movies.disney.com/encanto",
+    "image": "https://lumiere-a.akamaihd.net/v1/images/p_encanto_homeent_22359_4892ae1c.jpeg?region=0%2C0%2C540%2C810",
+    "trailer": "https://secure.disney.com/embed/5cd227e2fc288ebd6b4f2a72?domain=video.disney.com"
+  },
+  "zootopia": {
+    "page": "https://movies.disney.com/zootopia",
+    "image": "https://lumiere-a.akamaihd.net/v1/images/p_disneymovies_zootopia_poster_v2_a1e31204.jpeg?region=0%2C0%2C540%2C810",
+    "trailer": "https://secure.disney.com/embed/531679143431a30118e2b3c7?domain=video.disney.com"
+  },
+  "luca": {
+    "page": "https://movies.disney.com/luca",
+    "image": "https://lumiere-a.akamaihd.net/v1/images/p_luca_21670_3c13c611.jpeg?region=0%2C0%2C540%2C810",
+    "trailer": "https://secure.disney.com/embed/5c10817bdff5debd6b4f2a72?domain=video.disney.com"
+  },
+  "soul": {
+    "page": "https://movies.disney.com/soul",
+    "image": "https://lumiere-a.akamaihd.net/v1/images/p_soul_disneyplus_v2_20907_764da65d.jpeg?region=0%2C0%2C540%2C810",
+    "trailer": "https://secure.disney.com/embed/5b1aa885f9dd1ebd6b4f2a72?domain=video.disney.com"
+  },
+  "lionking": {
+    "page": "https://movies.disney.com/the-lion-king",
+    "image": "https://lumiere-a.akamaihd.net/v1/images/p_thelionking_19752_1_0b9de87b.jpeg?region=0%2C0%2C540%2C810",
+    "trailer": "https://secure.disney.com/embed/579b5be6b2980c85c6be499e?domain=video.disney.com"
+  },
+  "frozen": {
+    "page": "https://movies.disney.com/frozen",
+    "image": "https://lumiere-a.akamaihd.net/v1/images/p_frozen_18373_3131259c.jpeg?region=0%2C0%2C540%2C810",
+    "trailer": "https://secure.disney.com/embed/4efa2d8359d0874d5702ee4d?domain=video.disney.com"
+  },
+  "toystory": {
+    "page": "https://movies.disney.com/toy-story",
+    "image": "https://lumiere-a.akamaihd.net/v1/images/p_toystory_19639_424d94a0.jpeg?region=0%2C0%2C540%2C810",
+    "trailer": "https://secure.disney.com/embed/4bd800172718893a6ac45c67?domain=video.disney.com"
+  },
+  "nemo": {
+    "page": "https://movies.disney.com/finding-nemo",
+    "image": "https://lumiere-a.akamaihd.net/v1/images/p_findingnemo_19752_05271d3f.jpeg?region=0%2C0%2C540%2C810",
+    "trailer": "https://secure.disney.com/embed/54895f79c9fb6fbe3c75ea63?domain=video.disney.com"
+  },
+  "aladdin": {},
+  "beauty": {
+    "page": "https://movies.disney.com/beauty-and-the-beast-1991",
+    "image": "https://lumiere-a.akamaihd.net/v1/images/p_beautyandthebeast1991_20488_592ec4b5.jpeg?region=0%2C0%2C540%2C810",
+    "trailer": "https://secure.disney.com/embed/547a4ba31401a5f09a0fb097?domain=video.disney.com",
+    "trailerSource": "https://video.disney.com/watch/beauty-and-the-beast-theatrical-trailers-547a4ba31401a5f09a0fb097"
+  },
+  "coco": {
+    "page": "https://movies.disney.com/coco",
+    "image": "https://lumiere-a.akamaihd.net/v1/images/pt_coco_31b33206.jpeg?region=0%2C0%2C300%2C450",
+    "trailer": "https://secure.disney.com/embed/56272aa0eddd0db78706b625?domain=video.disney.com"
+  },
+  "incredibles": {
+    "page": "https://movies.disney.com/the-incredibles",
+    "image": "https://lumiere-a.akamaihd.net/v1/images/p_theincredibles_19751_52f1f47a.jpeg?region=0%2C0%2C540%2C810",
+    "trailer": "https://secure.disney.com/embed/4be10336187da49519ec4e85?domain=video.disney.com",
+    "trailerSource": "https://video.disney.com/watch/the-incredibles-trailer-4be10336187da49519ec4e85"
+  },
+  "ratatouille": {
+    "page": "https://movies.disney.com/ratatouille",
+    "image": "https://lumiere-a.akamaihd.net/v1/images/p_ratatouille_19736_0814231f.jpeg?region=0%2C0%2C540%2C810",
+    "trailer": "https://secure.disney.com/embed/548985412be9afbe3c75ea63?domain=video.disney.com"
+  },
+  "up": {
+    "page": "https://movies.disney.com/up",
+    "image": "https://lumiere-a.akamaihd.net/v1/images/p_up_19753_e6f911e3.jpeg?region=0%2C0%2C540%2C810",
+    "trailer": "https://secure.disney.com/embed/548991c6e2f5afbe3c75ea63?domain=video.disney.com",
+    "trailerSource": "https://video.disney.com/watch/up-trailer-548991c6e2f5afbe3c75ea63"
+  },
+  "tangled": {
+    "page": "https://movies.disney.com/tangled",
+    "image": "https://lumiere-a.akamaihd.net/v1/images/p_tangled_20509_cd0a5809.jpeg?region=0%2C0%2C540%2C810",
+    "trailer": "https://secure.disney.com/embed/4be10fd66f75942f7f3ce022?domain=video.disney.com"
+  },
+  "walle": {
+    "page": "https://movies.disney.com/wall-e",
+    "image": "https://lumiere-a.akamaihd.net/v1/images/p_walle_19753_69f7ff00.jpeg?region=0%2C0%2C540%2C810",
+    "trailer": "https://secure.disney.com/embed/4bd8003e33ca293a6ac45c67?domain=video.disney.com"
+  },
+  "endgame": {
+    "page": "https://movies.disney.com/avengers-endgame",
+    "image": "https://lumiere-a.akamaihd.net/v1/images/p_disneymovies_avengers_endgame_encore_v1_86784ef0.jpeg?region=0%2C0%2C540%2C810",
+    "trailer": "https://secure.disney.com/embed/5840cf6e5b0ccebd6b4f2a72?domain=video.disney.com"
+  },
+  "blackpanther": {
+    "page": "https://movies.disney.com/black-panther",
+    "image": "https://lumiere-a.akamaihd.net/v1/images/p_blackpanther_19754_4ac13f07.jpeg?region=0%2C0%2C540%2C810",
+    "trailer": "https://secure.disney.com/embed/56b5689c28f4ee5e698e03fd?domain=video.disney.com"
+  },
+  "captainmarvel": {
+    "page": "https://movies.disney.com/captain-marvel",
+    "image": "https://lumiere-a.akamaihd.net/v1/images/p_captainmarvel_19755_3a1675ee.jpeg?region=0%2C0%2C540%2C810",
+    "trailer": "https://secure.disney.com/embed/57624cdd54c4786c0e7eed34?domain=video.disney.com"
+  },
+  "pirates": {
+    "page": "https://movies.disney.com/pirates-of-the-caribbean-the-curse-of-the-black-pearl",
+    "image": "https://lumiere-a.akamaihd.net/v1/images/p_piratesofthecaribbean_thecurseoftheblackpearl_19642_d1ba8e66.jpeg?region=0%2C0%2C540%2C810",
+    "trailer": "https://secure.disney.com/embed/4bcd1e927ad4e5d339e69f42?domain=video.disney.com"
+  },
+  "rogueone": {
+    "page": "https://movies.disney.com/rogue-one-a-star-wars-story",
+    "image": "https://lumiere-a.akamaihd.net/v1/images/p_rogueoneastarwarsstory_20527_d05c8a04.jpeg?region=0%2C0%2C540%2C810",
+    "trailer": "https://secure.disney.com/embed/53ec6724dcd393709056807f?domain=video.disney.com"
+  },
+  "junglebook": {
+    "page": "https://movies.disney.com/the-jungle-book-2016",
+    "image": "https://lumiere-a.akamaihd.net/v1/images/p_thejunglebook2016_19751_6b8cfcec.jpeg?region=0%2C0%2C540%2C810",
+    "trailer": "https://secure.disney.com/embed/536ecc1e7d1a1fdbe23921b5?domain=video.disney.com"
+  }
+}

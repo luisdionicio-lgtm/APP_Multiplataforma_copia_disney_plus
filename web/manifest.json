@@ -1,0 +1,19 @@
+{
+  "name": "Disney+ · Experiencia móvil",
+  "short_name": "Disney+ Demo",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#080C17",
+  "theme_color": "#080C17",
+  "description": "Catálogo educativo con clásicos y tráileres oficiales.",
+  "orientation": "portrait-primary",
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "app-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "disney": {
+    "page": "https://newsroom.disney.fr/photos/logo-disney-png-d3bb-dc71f.html",
+    "image": "https://storage.googleapis.com/endurance-apps-liip/media/cache/disney_no_filter_grid_fs/65cf1807107e884495073062"
+  },
+  "pixar": {
+    "page": "https://newsroom.disney.fr/photos/logo-pixar-png-90d6-dc71f.html",
+    "image": "https://storage.googleapis.com/endurance-apps-liip/media/cache/disney_no_filter_grid_fs/65cf18095a1d87d7e4022e89"
+  },
+  "starwars": {
+    "page": "https://newsroom.disney.fr/photos/logo-star-wars-png-8836-dc71f.html",
+    "image": "https://storage.googleapis.com/endurance-apps-liip/media/cache/disney_no_filter_grid_fs/65cf1806e7be6986d90f30ce"
+  },
+  "natgeo": {
+    "page": "https://newsroom.disney.fr/photos/logo-national-geographic-png-8303-dc71f.html",
+    "image": "https://storage.googleapis.com/endurance-apps-liip/media/cache/disney_no_filter_grid_fs/65cf180c209178cf0b0c1043"
+  },
+  "marvel": {
+    "page": "https://newsroom.disney.fr/photos/mcmp-0002-jpg-71a2-dc71f.html",
+    "image": "https://storage.googleapis.com/endurance-apps-liip/media/cache/disney_no_filter_grid_fs/65ca495462339606d80c2a69"
+  },
+  "disneyplus": {
+    "page": "https://www.disneyplus.com/",
+    "image": "https://disney.images.edge.bamgrid.com/ripcut-delivery/v2/variant/disney/C17497FEB6E396BC29C6A790A01C34FEAC1E56F78A0AEAD93D6390B42C95C05E/compose?format=png&width=400"
+  },
+  "espn": {
+    "page": "https://www.espn.com/",
+    "image": "https://a.espncdn.com/redesign/assets/img/logos/espn-404@2x.png"
+  },
+  "fifa": {
+    "page": "https://commons.wikimedia.org/wiki/File:FIFA_logo_without_slogan.svg",
+    "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/aa/FIFA_logo_without_slogan.svg/330px-FIFA_logo_without_slogan.svg.png"
+  }
+}
